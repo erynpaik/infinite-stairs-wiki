@@ -1,7 +1,30 @@
+'use client';
+
 import Image from "next/image"
 import Link from "next/link"
+import { useState, useEffect } from "react"
+import { client } from "@/sanity/client" // <-- Import your Sanity client!
 
 export default function Home() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [characters, setCharacters] = useState<{ name: string, slug: { current: string } }[]>([]);
+
+  useEffect(() => {
+    async function fetchCharacters() {
+      const data = await client.fetch(`*[_type == "character"]{
+        name,
+        slug
+      }`);
+      setCharacters(data);
+    }
+
+    fetchCharacters();
+  }, []);
+
+  const filteredCharacters = characters.filter((char) =>
+    char.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <main className="min-h-screen bg-black text-white px-6 py-16 font-pixel">
       <div className="max-w-xl mx-auto space-y-12">
@@ -16,8 +39,24 @@ export default function Home() {
           priority
         />
 
-        {/* Header Title (now white) */}
-        <h1 className="text-4xl sm:text-5xl font-bold text-white drop-shadow text-center">
+        {/* Header Title */}
+        <h1
+          className="text-4xl sm:text-5xl font-bold text-center bg-clip-text text-transparent"
+          style={{
+            backgroundImage: `linear-gradient(
+              to bottom,
+              #ffffff 0%,
+              #ffffff 15%,
+              #fee980 25%,
+              #feeb84 35%,
+              #ffdb3f 50%,
+              #febb26 65%,
+              #f37b00 80%,
+              #cb5400 90%,
+              #a63e00 100%
+            )`
+          }}
+        >
           Infinite Stairs Wiki
         </h1>
 
@@ -26,29 +65,59 @@ export default function Home() {
           Welcome! Explore characters, titles, unlock guides, and secrets from the pixelated addicting game of Infinite Stairs!
         </p>
 
-        {/* Navigation Buttons - no emojis */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-center">
-  <Link href="/wiki/characters">
-    <div className="bg-[#fed035] border-[3px] border-[#aea693] rounded-sm px-4 py-3 shadow-[2px_2px_0px_rgba(0,0,0,0.5)] hover:brightness-110 transition cursor-pointer">
-      <span className="font-pixel text-black text-lg">Characters</span>
-    </div>
-  </Link>
-  <Link href="/categories">
-    <div className="bg-[#fed035] border-[3px] border-[#aea693] rounded-sm px-4 py-3 shadow-[2px_2px_0px_rgba(0,0,0,0.5)] hover:brightness-110 transition cursor-pointer">
-      <span className="font-pixel text-black text-lg">Categories</span>
-    </div>
-  </Link>
-</div>
+        {/* 🚀 Search bar */}
+        <div>
+          <input
+            type="text"
+            placeholder="Search characters..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full p-2 text-white bg-black rounded-md border-2"
+            style={{ borderColor: "#435b87" }}
+          />
 
-        {/* CTA Button - old version */}
-<div className="pt-8 text-center">
-<Link
-  href="/wiki/characters"
-  className="inline-block bg-[#435b87] border-[3px] border-[#aea693] hover:brightness-110 text-white px-6 py-2 rounded-sm shadow font-pixel text-lg"
->
-  Start Exploring →
-</Link>
-</div>
+          {/* Only show results if user is typing */}
+          {searchTerm && (
+            <ul>
+              {filteredCharacters.length > 0 ? (
+                filteredCharacters.map((char, index) => (
+                  <li key={index} className="p-2 border-b border-gray-700">
+                    <Link href={`/wiki/characters/${char.slug.current}`} className="hover:underline text-yellow-300">
+                      {char.name}
+                    </Link>
+                  </li>
+                ))
+              ) : (
+                <li className="p-2 text-gray-400">No characters found.</li>
+              )}
+            </ul>
+          )}
+        </div>
+
+        {/* Navigation Buttons */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-center">
+          <Link href="/wiki/characters">
+            <div className="bg-[#fed035] border-[3px] border-[#aea693] rounded-sm px-4 py-3 shadow-[2px_2px_0px_rgba(0,0,0,0.5)] hover:brightness-110 transition cursor-pointer">
+              <span className="font-pixel text-black text-lg">Characters</span>
+            </div>
+          </Link>
+          <Link href="/categories">
+            <div className="bg-[#fed035] border-[3px] border-[#aea693] rounded-sm px-4 py-3 shadow-[2px_2px_0px_rgba(0,0,0,0.5)] hover:brightness-110 transition cursor-pointer">
+              <span className="font-pixel text-black text-lg">Categories</span>
+            </div>
+          </Link>
+        </div>
+
+        {/* CTA Button */}
+        <div className="pt-8 text-center">
+          <Link
+            href="/wiki/characters"
+            className="inline-block bg-[#435b87] border-[3px] border-[#aea693] hover:brightness-110 text-white px-6 py-2 rounded-sm shadow font-pixel text-lg"
+          >
+            Start Exploring →
+          </Link>
+        </div>
+
       </div>
     </main>
   )
