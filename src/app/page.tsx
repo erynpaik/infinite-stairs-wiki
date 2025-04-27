@@ -7,7 +7,7 @@ import { client } from "@/sanity/client" // <-- Import your Sanity client!
 
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [characters, setCharacters] = useState<{ name: string, slug: { current: string } }[]>([]);
+  const [characters, setCharacters] = useState<{ name: string, slug?: { current: string } }[]>([]);
 
   useEffect(() => {
     async function fetchCharacters() {
@@ -80,16 +80,21 @@ export default function Home() {
           {searchTerm && (
             <ul>
               {filteredCharacters.length > 0 ? (
-                filteredCharacters.map((char, index) => (
-                  <li key={index} className="p-2 border-b border-gray-700">
-                    <Link href={`/wiki/characters/${char.slug.current}`} className="hover:underline text-yellow-300">
-                      {char.name}
-                    </Link>
-                  </li>
-                ))
-              ) : (
-                <li className="p-2 text-gray-400">No characters found.</li>
-              )}
+  filteredCharacters.map((char, index) => (
+    <li key={index} className="p-2 border-b border-gray-700">
+      {char.slug ? (
+        <Link href={`/wiki/characters/${char.slug.current}`} className="hover:underline text-yellow-300">
+          {char.name}
+        </Link>
+      ) : (
+        <span>{char.name}</span> // fallback if slug missing
+      )}
+    </li>
+  ))
+) : (
+  <li className="p-2 text-gray-400">No characters found.</li>
+)}
+
             </ul>
           )}
         </div>
