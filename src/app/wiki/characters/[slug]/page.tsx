@@ -1,3 +1,5 @@
+'use client';
+
 import { sanityClient } from '@/lib/sanityClient'
 import { urlFor } from '@/lib/sanityImage'
 
@@ -28,81 +30,105 @@ export default async function CharacterDetailPage({ params }: Props) {
   )
 
   if (!character) {
-    return <p className="text-center text-red-600 py-10">Character not found.</p>
+    return <p className="text-center text-red-600 py-10 font-pixel">Character not found.</p>
   }
 
   return (
-    <main className="max-w-2xl mx-auto py-10 px-4">
-      <h1 className="text-4xl font-bold mb-6 text-white">{character.name}</h1>
+    <main className="min-h-screen bg-black text-white px-6 py-16 font-pixel">
+      <div className="max-w-2xl mx-auto space-y-10">
 
-      {character.image && (
-        <img
-          src={urlFor(character.image).width(600).url()}
-          alt={character.name}
-          className="w-full h-64 object-contain rounded shadow-lg mb-6 bg-zinc-900"
-        />
-      )}
+        {/* Back Button at Top */}
+        <div className="flex justify-start pb-6">
+  <a
+    href="/wiki/characters"
+    className="font-pixel text-white hover:underline text-[24px]"
+  >
+    ← Back to Characters
+  </a>
+</div>
 
-      {character.description && (
-        <p className="text-lg text-white mb-6 whitespace-pre-line">
-          {character.description}
-        </p>
-      )}
 
-      {character.howToObtain && (
-        <>
-          <h3 className="text-xl font-semibold mt-6 text-white">How to Obtain</h3>
-          <p className="text-white whitespace-pre-line">{character.howToObtain}</p>
-        </>
-      )}
+        {/* Character Name */}
+        <h1 className="text-4xl sm:text-5xl font-bold text-center drop-shadow">
+          {character.name}
+        </h1>
 
-{character.titles?.length > 0 && (
-  <>
-    <h3 className="text-xl font-semibold mt-6 mb-4 text-white">Titles</h3>
-    <div className="space-y-4">
-      {character.titles.map((title: any, i: number) => (
-        <div key={i} className="space-y-2">
-          <div className="w-[180px] bg-[#f08080] border-[2px] border-[#d46a6a] rounded-sm text-white text-sm py-[6px] px-2 tracking-wide text-center font-pixel shadow-[inset_1px_1px_0px_rgba(0,0,0,0.2),inset_-1px_-1px_0px_rgba(255,255,255,0.15),1px_1px_0px_rgba(0,0,0,0.3)]">
-            {title.name}
+        {/* Character Image */}
+        {character.image && (
+          <div className="flex justify-center">
+            <img
+              src={urlFor(character.image).width(600).url()}
+              alt={character.name}
+              className="rounded-lg border-4 border-[#435b87] bg-black p-2 w-full max-w-sm"
+            />
           </div>
-          {title.howToObtain && (
-            <p className="text-gray-100 text-base whitespace-pre-line w-[180px] pl-1 font-pixel leading-snug">
-              {title.howToObtain}
-            </p>
-          )}
-        </div>
-      ))}
-    </div>
-  </>
-)}
+        )}
 
-      {character.skins?.length > 0 && (
-        <>
-          <h3 className="text-xl font-semibold mt-6 mb-4 text-white">Skins</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {character.skins.map((skin: any, i: number) => (
-              <div key={i} className="border rounded-xl p-4 shadow bg-zinc-900">
-                {skin.image && (
-                  <img
-                    src={urlFor(skin.image).width(400).url()}
-                    alt={skin.name}
-                    className="w-full h-64 object-contain rounded mb-3 bg-black"
-                  />
-                )}
-                <p className="text-white font-medium">{skin.name}</p>
-                <p className="text-gray-300 text-sm whitespace-pre-line">
-                  {skin.howToObtain}
-                </p>
+        {/* Character Description */}
+        {character.description && (
+          <p className="text-center text-lg text-gray-300 leading-relaxed whitespace-pre-line">
+            {character.description}
+          </p>
+        )}
+
+        {/* How to Obtain */}
+        {character.howToObtain && (
+          <>
+            <div className="flex justify-center">
+              <div className="bg-[#f08080] border-[3px] border-[#d46a6a] rounded-sm px-6 py-2 inline-block shadow-[2px_2px_0px_rgba(0,0,0,0.5)] font-pixel text-white text-2xl text-center">
+                How to Obtain
               </div>
-            ))}
-          </div>
-        </>
-      )}
+            </div>
+            <p className="text-center text-lg text-gray-300 whitespace-pre-line leading-relaxed">
+              {character.howToObtain}
+            </p>
+          </>
+        )}
 
-      <div className="mt-8">
-        <a href="/wiki/characters" className="text-blue-400 hover:underline">
-          ← Back to all characters
-        </a>
+        {/* Titles */}
+        {character.titles?.length > 0 && (
+          <>
+            <h3 className="text-2xl font-bold mt-10 mb-4 text-center text-white">Titles</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 justify-items-center">
+              {character.titles.map((title: any, i: number) => (
+                <div key={i} className="space-y-2 text-center w-[220px]">
+                  <div className="bg-[#f08080] border-[2px] border-[#d46a6a] rounded-sm text-white text-base py-2 px-3 tracking-wide font-pixel shadow-[inset_1px_1px_0px_rgba(0,0,0,0.2),inset_-1px_-1px_0px_rgba(255,255,255,0.15),1px_1px_0px_rgba(0,0,0,0.3)]">
+                    {title.name}
+                  </div>
+                  {title.howToObtain && (
+                    <p className="text-gray-100 text-lg whitespace-pre-line font-pixel leading-snug">
+                      {title.howToObtain}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+
+        {/* Skins */}
+        {character.skins?.length > 0 && (
+          <>
+            <h3 className="text-2xl font-bold mt-10 mb-4 text-center text-white">Skins</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {character.skins.map((skin: any, i: number) => (
+                <div key={i} className="border-[2px] border-[#435b87] rounded-xl p-4 shadow bg-black">
+                  {skin.image && (
+                    <img
+                      src={urlFor(skin.image).width(400).url()}
+                      alt={skin.name}
+                      className="w-full h-64 object-contain rounded mb-3 bg-black"
+                    />
+                  )}
+                  <p className="text-white font-pixel">{skin.name}</p>
+                  <p className="text-gray-300 text-lg whitespace-pre-line font-pixel">
+                    {skin.howToObtain}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
       </div>
     </main>
   )
