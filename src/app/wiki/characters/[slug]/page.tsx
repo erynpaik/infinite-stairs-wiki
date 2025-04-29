@@ -74,11 +74,11 @@ export default async function CharacterDetailPage({ params }: Props) {
         {/* How to Obtain */}
         {character.howToObtain && (
           <>
-            <div className="flex justify-center">
-              <div className="bg-[#f08080] border-[3px] border-[#d46a6a] rounded-sm px-6 py-2 inline-block shadow-[2px_2px_0px_rgba(0,0,0,0.5)] font-pixel text-white text-2xl text-center">
-                How to Obtain
-              </div>
-            </div>
+            <div className="flex justify-center mb-2">
+  <div className="bg-[#f08080] border-[3px] border-[#d46a6a] rounded-sm px-6 py-2 inline-block shadow-[2px_2px_0px_rgba(0,0,0,0.5)] font-pixel text-white text-2xl text-center">
+    How to Obtain
+  </div>
+</div>
             <p className="text-center text-lg text-gray-300 whitespace-pre-line leading-relaxed">
               {character.howToObtain}
             </p>
