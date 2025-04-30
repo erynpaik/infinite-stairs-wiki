@@ -100,7 +100,7 @@ export default function CharactersPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
             {filteredCharacters.map((char) => (
               <Link key={char._id} href={`/wiki/characters/${char.slug.current}`}>
-                <div className="border-2 border-[#435b87] rounded-lg p-4 shadow bg-black hover:brightness-110 transition cursor-pointer text-center">
+                <div className="border-2 border-[#f37b00] rounded-lg p-4 shadow bg-black hover:brightness-110 transition cursor-pointer text-center">
                   
                   {char.image && (
                     <img
