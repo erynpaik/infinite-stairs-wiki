@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { sanityClient } from '@/lib/sanityClient'
 import { urlFor } from '@/lib/sanityImage'
 
@@ -28,6 +29,8 @@ type Character = {
 export default function CharactersPage() {
   const [characters, setCharacters] = useState<Character[]>([])
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
+  const [searchTerm, setSearchTerm] = useState('')
+  const router = useRouter()
 
   useEffect(() => {
     sanityClient
@@ -47,6 +50,19 @@ export default function CharactersPage() {
       .then(setCharacters)
   }, [])
 
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && characters.length > 0) {
+      const trimmed = searchTerm.trim().toLowerCase()
+      const match = characters.find(
+        (char) => char.name.trim().toLowerCase() === trimmed
+      )
+
+      if (match) {
+        router.push(`/wiki/characters/${match.slug.current}`)
+      }
+    }
+  }
+
   const categories = Array.from(
     new Set(characters.map((char) => char.category?.name).filter(Boolean))
   )
@@ -63,6 +79,18 @@ export default function CharactersPage() {
         <h1 className="text-4xl sm:text-5xl font-bold text-center drop-shadow mb-10">
           Characters
         </h1>
+
+        {/* Search Bar */}
+        <div className="mb-10 text-center">
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyDown={handleSearchKeyDown}
+            placeholder="Search character name..."
+            className="px-4 py-2 border-2 border-[#f37b00] rounded bg-black text-white font-pixel w-full max-w-md"
+          />
+        </div>
 
         {/* Filter Buttons */}
         {categories.length > 0 && (
