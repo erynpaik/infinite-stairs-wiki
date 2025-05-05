@@ -61,7 +61,7 @@ export default function Home() {
         </h1>
 
         {/* Short intro */}
-        <p className="text-center text-base text-gray-300">
+        <p className="text-center text-lg text-gray-300">
           Welcome! Explore characters, titles, unlock guides, and secrets from the pixelated addicting game of Infinite Stairs!
         </p>
 
@@ -103,12 +103,12 @@ export default function Home() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-center">
           <Link href="/wiki/characters">
             <div className="bg-[#fed035] border-[3px] border-[#aea693] rounded-sm px-4 py-3 shadow-[2px_2px_0px_rgba(0,0,0,0.5)] hover:brightness-110 transition cursor-pointer">
-              <span className="font-pixel text-black text-lg">Characters</span>
+              <span className="font-pixel text-black text-xl">Characters</span>
             </div>
           </Link>
           <Link href="/categories">
             <div className="bg-[#fed035] border-[3px] border-[#aea693] rounded-sm px-4 py-3 shadow-[2px_2px_0px_rgba(0,0,0,0.5)] hover:brightness-110 transition cursor-pointer">
-              <span className="font-pixel text-black text-lg">Categories</span>
+              <span className="font-pixel text-black text-xl">Categories</span>
             </div>
           </Link>
         </div>
@@ -117,7 +117,7 @@ export default function Home() {
         <div className="pt-8 text-center">
           <Link
             href="/wiki/characters"
-            className="inline-block bg-[#435b87] border-[3px] border-[#aea693] hover:brightness-110 text-white px-6 py-2 rounded-sm shadow font-pixel text-lg"
+            className="inline-block bg-[#435b87] border-[3px] border-[#aea693] hover:brightness-110 text-white px-6 py-2 rounded-sm shadow font-pixel text-xl"
           >
             Start Exploring →
           </Link>
