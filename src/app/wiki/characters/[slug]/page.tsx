@@ -1,5 +1,3 @@
-'use client';
-
 import { sanityClient } from '@/lib/sanityClient'
 import { urlFor } from '@/lib/sanityImage'
 
