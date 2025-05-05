@@ -24,8 +24,9 @@ export default async function CharacterDetailPage({ params }: Props) {
         image
       }
     }`,
-    { slug: params.slug }
-  )
+    { slug: params.slug },
+    { cache: 'force-cache' }
+  );
 
   if (!character) {
     return <p className="text-center text-red-600 py-10 font-pixel">Character not found.</p>
@@ -57,6 +58,7 @@ export default async function CharacterDetailPage({ params }: Props) {
             <img
               src={urlFor(character.image).width(600).url()}
               alt={character.name}
+              loading="lazy"
               className="rounded-lg border-4 border-[#435b87] bg-black p-2 w-full max-w-sm"
             />
           </div>
@@ -115,6 +117,7 @@ export default async function CharacterDetailPage({ params }: Props) {
                     <img
                       src={urlFor(skin.image).width(400).url()}
                       alt={skin.name}
+                      loading="lazy"
                       className="w-full h-64 object-contain rounded mb-3 bg-black"
                     />
                   )}
