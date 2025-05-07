@@ -3,7 +3,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { useState, useEffect } from "react"
-import { client } from "@/sanity/client" // <-- Import your Sanity client!
+import { client } from "@/sanity/client"
 
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -25,6 +25,28 @@ export default function Home() {
     char.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && filteredCharacters.length > 0) {
+      const trimmed = searchTerm.trim().toLowerCase();
+
+      // Try exact match first
+      let match = filteredCharacters.find(
+        (char) => char.name.trim().toLowerCase() === trimmed
+      );
+
+      // Fallback to partial match
+      if (!match) {
+        match = filteredCharacters.find(
+          (char) => char.name.toLowerCase().includes(trimmed)
+        );
+      }
+
+      if (match && match.slug?.current) {
+        window.location.href = `/wiki/characters/${match.slug.current}`;
+      }
+    }
+  };
+
   return (
     <main className="min-h-screen bg-black text-white px-6 py-16 font-pixel">
       <div className="max-w-xl mx-auto space-y-12">
@@ -41,7 +63,7 @@ export default function Home() {
 
         {/* Header Title */}
         <h1
-          className="text-4xl sm:text-5xl font-bold text-center bg-clip-text text-transparent"
+          className="text-5xl sm:text-6xl font-bold text-center bg-clip-text text-transparent"
           style={{
             backgroundImage: `linear-gradient(
               to bottom,
@@ -61,7 +83,7 @@ export default function Home() {
         </h1>
 
         {/* Short intro */}
-        <p className="text-center text-lg text-gray-300">
+        <p className="text-center text-lg sm:text-xl text-gray-300">
           Welcome! Explore characters, titles, unlock guides, and secrets from the pixelated addicting game of Infinite Stairs!
         </p>
 
@@ -72,7 +94,8 @@ export default function Home() {
             placeholder="Search characters..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full p-2 text-white bg-black rounded-md border-2"
+            onKeyDown={handleSearchKeyDown}
+            className="w-full p-3 text-lg sm:text-xl text-white bg-black rounded-md border-2"
             style={{ borderColor: "#435b87" }}
           />
 
@@ -80,21 +103,20 @@ export default function Home() {
           {searchTerm && (
             <ul>
               {filteredCharacters.length > 0 ? (
-  filteredCharacters.map((char, index) => (
-    <li key={index} className="p-2 border-b border-gray-700">
-      {char.slug ? (
-        <Link href={`/wiki/characters/${char.slug.current}`} className="hover:underline text-yellow-300">
-          {char.name}
-        </Link>
-      ) : (
-        <span>{char.name}</span> // fallback if slug missing
-      )}
-    </li>
-  ))
-) : (
-  <li className="p-2 text-gray-400">No characters found.</li>
-)}
-
+                filteredCharacters.map((char, index) => (
+                  <li key={index} className="p-2 border-b border-gray-700">
+                    {char.slug ? (
+                      <Link href={`/wiki/characters/${char.slug.current}`} className="hover:underline text-yellow-300">
+                        {char.name}
+                      </Link>
+                    ) : (
+                      <span>{char.name}</span>
+                    )}
+                  </li>
+                ))
+              ) : (
+                <li className="p-2 text-gray-400">No characters found.</li>
+              )}
             </ul>
           )}
         </div>
@@ -103,12 +125,12 @@ export default function Home() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-center">
           <Link href="/wiki/characters">
             <div className="bg-[#fed035] border-[3px] border-[#aea693] rounded-sm px-4 py-3 shadow-[2px_2px_0px_rgba(0,0,0,0.5)] hover:brightness-110 transition cursor-pointer">
-              <span className="font-pixel text-black text-xl">Characters</span>
+              <span className="font-pixel text-black text-xl sm:text-2xl">Characters</span>
             </div>
           </Link>
           <Link href="/categories">
             <div className="bg-[#fed035] border-[3px] border-[#aea693] rounded-sm px-4 py-3 shadow-[2px_2px_0px_rgba(0,0,0,0.5)] hover:brightness-110 transition cursor-pointer">
-              <span className="font-pixel text-black text-xl">Categories</span>
+              <span className="font-pixel text-black text-xl sm:text-2xl">Categories</span>
             </div>
           </Link>
         </div>
@@ -117,7 +139,7 @@ export default function Home() {
         <div className="pt-8 text-center">
           <Link
             href="/wiki/characters"
-            className="inline-block bg-[#435b87] border-[3px] border-[#aea693] hover:brightness-110 text-white px-6 py-2 rounded-sm shadow font-pixel text-xl"
+            className="inline-block bg-[#435b87] border-[3px] border-[#aea693] hover:brightness-110 text-white px-6 py-3 rounded-sm shadow font-pixel text-xl sm:text-2xl"
           >
             Start Exploring →
           </Link>
@@ -125,5 +147,5 @@ export default function Home() {
 
       </div>
     </main>
-  )
+  );
 }
