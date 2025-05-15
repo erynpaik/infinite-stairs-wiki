@@ -29,12 +29,10 @@ export default function Home() {
     if (e.key === 'Enter' && filteredCharacters.length > 0) {
       const trimmed = searchTerm.trim().toLowerCase();
 
-      // Try exact match first
       let match = filteredCharacters.find(
         (char) => char.name.trim().toLowerCase() === trimmed
       );
 
-      // Fallback to partial match
       if (!match) {
         match = filteredCharacters.find(
           (char) => char.name.toLowerCase().includes(trimmed)
@@ -48,9 +46,12 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-black text-white px-6 py-16 font-pixel">
-      <div className="max-w-xl mx-auto space-y-12">
+    <main className="min-h-screen text-white px-6 py-16 font-pixel bg-infinite-scroll relative overflow-hidden">
+      {/* Dark overlay for readability */}
+      <div className="absolute inset-0 bg-black opacity-60 z-0"></div>
 
+      {/* Content */}
+      <div className="relative z-10 max-w-xl mx-auto space-y-12">
         {/* Logo image */}
         <Image
           src="/logostairs.png"
@@ -87,7 +88,7 @@ export default function Home() {
           Welcome! Explore characters, titles, unlock guides, and secrets from the pixelated addicting game of Infinite Stairs!
         </p>
 
-        {/* 🚀 Search bar */}
+        {/* Search bar */}
         <div>
           <input
             type="text"
@@ -99,7 +100,6 @@ export default function Home() {
             style={{ borderColor: "#435b87" }}
           />
 
-          {/* Only show results if user is typing */}
           {searchTerm && (
             <ul>
               {filteredCharacters.length > 0 ? (
@@ -144,7 +144,6 @@ export default function Home() {
             Start Exploring →
           </Link>
         </div>
-
       </div>
     </main>
   );

@@ -26,3 +26,29 @@ body {
 .font-pixel {
   font-family: var(--font-pixel);
 }
+@keyframes scrollBackground {
+  0% {
+    background-position-y: 0%;
+  }
+  100% {
+    background-position-y: 100%;
+  }
+}
+
+@keyframes scrollBackground {
+  0% {
+    background-position-y: 100%;
+  }
+  100% {
+    background-position-y: 0%;
+  }
+}
+
+.bg-infinite-scroll {
+  background-image: url('/fp_background.jpg');
+  background-repeat: repeat-y;
+  background-size: 100% auto; 
+  background-position-x: center;
+  animation: scrollBackground 15s linear infinite;
+}
+
