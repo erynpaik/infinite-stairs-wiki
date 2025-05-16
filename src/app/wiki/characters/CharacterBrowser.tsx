@@ -52,6 +52,16 @@ export default function CharacterBrowser({ characters }: { characters: Character
 
   return (
     <>
+      {/* 🔙 Back to Home Button */}
+      <div className="mb-6">
+        <Link
+          href="/"
+          className="font-pixel text-white hover:underline text-[24px]"
+  >
+          ← Back to Home
+        </Link>
+      </div>
+
       {/* Search Bar */}
       <div className="mb-10 text-center">
         <input
@@ -60,7 +70,7 @@ export default function CharacterBrowser({ characters }: { characters: Character
           onChange={(e) => setSearchTerm(e.target.value)}
           onKeyDown={handleSearchKeyDown}
           placeholder="Search character name..."
-          className="px-4 py-2 border-2 border-[#f37b00] rounded bg-black text-white font-pixel w-full max-w-md"
+          className="px-4 py-2 border-2 border-[#435b87] rounded bg-black text-white font-pixel w-full max-w-md"
         />
       </div>
 
@@ -102,7 +112,7 @@ export default function CharacterBrowser({ characters }: { characters: Character
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
           {filteredCharacters.map((char) => (
             <Link key={char._id} href={`/wiki/characters/${char.slug.current}`}>
-              <div className="border-2 border-[#f37b00] rounded-lg p-4 shadow bg-black hover:brightness-110 transition cursor-pointer text-center">
+              <div className="border-2 border-[#435b87] rounded-lg p-4 shadow bg-black hover:brightness-110 transition cursor-pointer text-center">
                 {char.image && (
                   <img
                     src={urlFor(char.image).width(300).url()}
@@ -125,3 +135,4 @@ export default function CharacterBrowser({ characters }: { characters: Character
     </>
   )
 }
+

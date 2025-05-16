@@ -46,7 +46,7 @@ export default function Home() {
   };
 
   return (
-    <main className="relative min-h-screen text-white px-6 py-16 font-pixel overflow-hidden">
+    <main className="relative min-h-screen text-white px-6 py-8 font-pixel overflow-hidden">
       {/* dark overlay for readability */}
       <div className="absolute inset-0 bg-black/60 z-0" />
 
