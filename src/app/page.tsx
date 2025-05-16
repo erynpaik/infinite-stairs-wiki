@@ -47,28 +47,16 @@ export default function Home() {
 
   return (
     <main className="relative min-h-screen text-white px-6 py-16 font-pixel overflow-hidden">
-      {/* 🎥 Video background */}
-      <video
-        autoPlay
-        loop
-        muted
-        playsInline
-        className="absolute inset-0 w-full h-full object-contain z-0 scale-110"
-      >
-        <source src="/gameplay-bg.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
-
       {/* dark overlay for readability */}
       <div className="absolute inset-0 bg-black/60 z-0" />
 
       {/* Content */}
-      <div className="relative z-10 max-w-xl mx-auto space-y-12 pt-32 sm:pt-40">
+      <div className="relative z-10 max-w-xl mx-auto space-y-12 pt-24 sm:pt-35">
         {/* Logo image */}
         <Image
           src="/logostairs.png"
           alt="Infinite Stairs Logo"
-          width={300}
+          width={350}
           height={160}
           className="mx-auto"
           priority
@@ -104,7 +92,7 @@ export default function Home() {
         <div>
           <input
             type="text"
-            placeholder="Search characters..."
+            placeholder="Search..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             onKeyDown={handleSearchKeyDown}
@@ -145,18 +133,7 @@ export default function Home() {
       <span className="font-pixel text-black text-xl sm:text-2xl">Categories</span>
     </div>
   </Link>
-  <Link href="/wiki/pets">
-    <div className="bg-[#fed035] border-[3px] border-[#aea693] rounded-sm px-4 py-3 shadow-[2px_2px_0px_rgba(0,0,0,0.5)] hover:brightness-110 transition cursor-pointer">
-      <span className="font-pixel text-black text-xl sm:text-2xl">Pets</span>
-    </div>
-  </Link>
-  <Link href="/wiki/maps">
-    <div className="bg-[#fed035] border-[3px] border-[#aea693] rounded-sm px-4 py-3 shadow-[2px_2px_0px_rgba(0,0,0,0.5)] hover:brightness-110 transition cursor-pointer">
-      <span className="font-pixel text-black text-xl sm:text-2xl">Maps</span>
-    </div>
-  </Link>
 </div>
-
         {/* CTA Button */}
         <div className="pt-8 text-center">
           <Link

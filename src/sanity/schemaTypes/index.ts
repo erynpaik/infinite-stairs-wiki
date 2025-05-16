@@ -4,7 +4,9 @@ import { blockContentType } from './blockContentType'
 import { postType } from './postType'
 import { authorType } from './authorType'
 import { character } from './character'
-import { categoryType } from './category' // ✅ this is the one you want
+import { categoryType } from './category' 
+import pet from './pet'
+
 
 export const schema: { types: SchemaTypeDefinition[] } = {
   types: [
@@ -13,6 +15,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     postType,
     authorType,
     character,
+    pet,
   ],
 }
 

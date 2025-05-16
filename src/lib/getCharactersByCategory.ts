@@ -8,8 +8,11 @@ export const getCharactersByCategory = async (slug: string) => {
         _id,
         name,
         slug,
-        image,
-        // add more fields if needed
+        image {
+          asset->{
+            url
+          }
+        }
       }
     `,
     { slug }
