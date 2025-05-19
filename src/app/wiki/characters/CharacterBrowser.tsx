@@ -52,16 +52,6 @@ export default function CharacterBrowser({ characters }: { characters: Character
 
   return (
     <>
-      {/* 🔙 Back to Home Button */}
-      <div className="mb-6">
-        <Link
-          href="/"
-          className="font-pixel text-white hover:underline text-[24px]"
-  >
-          ← Back to Home
-        </Link>
-      </div>
-
       {/* Search Bar */}
       <div className="mb-10 text-center">
         <input
@@ -135,4 +125,3 @@ export default function CharacterBrowser({ characters }: { characters: Character
     </>
   )
 }
-

@@ -6,8 +6,17 @@ export default async function CategoriesPage() {
 
   return (
     <main className="min-h-screen bg-black text-white px-6 py-12 font-pixel">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl sm:text-5xl font-bold text-center drop-shadow mb-10">
+      <div className="max-w-4xl mx-auto space-y-10">
+        
+        {/* ← Back to Home Button */}
+        <Link
+          href="/"
+          className="font-pixel text-white hover:underline text-[24px]"
+        >
+          ← Back to Home
+        </Link>
+
+        <h1 className="text-4xl sm:text-5xl font-bold text-center drop-shadow">
           Categories
         </h1>
 
