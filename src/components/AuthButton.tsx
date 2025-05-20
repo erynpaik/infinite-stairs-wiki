@@ -1,27 +1,29 @@
-// src/components/AuthButton.tsx
 'use client'
 
 import { signIn, signOut, useSession } from 'next-auth/react'
 
-export default function AuthButton() {
+export function AuthButton() {
   const { data: session, status } = useSession()
 
-  if (status === 'loading') return <p className="font-pixel text-white">Loading...</p>
-
-  if (!session) {
-    return (
-      <button onClick={() => signIn('google')} className="font-pixel text-white bg-blue-600 px-4 py-2 rounded hover:brightness-110">
-        Sign In with Google
-      </button>
-    )
-  }
+  if (status === 'loading') return null
 
   return (
-    <div className="flex items-center gap-4">
-      <p className="font-pixel text-white">Hello, {session.user?.name}</p>
-      <button onClick={() => signOut()} className="font-pixel text-white bg-red-600 px-4 py-2 rounded hover:brightness-110">
-        Sign Out
-      </button>
+    <div className="absolute top-4 right-4 z-50">
+      {session ? (
+        <button
+          onClick={() => signOut()}
+          className="font-pixel bg-[#fed035] text-black border-[3px] border-[#aea693] px-6 py-2 rounded-sm shadow-[2px_2px_0px_rgba(0,0,0,0.5)] whitespace-nowrap text-sm hover:brightness-110 transition"
+        >
+          Sign Out
+        </button>
+      ) : (
+        <button
+          onClick={() => signIn('google')}
+          className="font-pixel bg-[#435b87] text-white border-[3px] border-[#aea693] px-6 py-2 rounded-sm shadow-[2px_2px_0px_rgba(0,0,0,0.5)] whitespace-nowrap text-sm hover:brightness-110 transition"
+        >
+          Sign In
+        </button>
+      )}
     </div>
   )
 }

@@ -4,6 +4,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { useState, useEffect } from "react"
 import { client } from "@/sanity/client"
+import { AuthButton } from 'src/components/AuthButton' 
 
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -47,6 +48,11 @@ export default function Home() {
 
   return (
     <main className="relative min-h-screen text-white px-6 py-8 font-pixel overflow-hidden">
+      {/*Auth button in top right */}
+      <div className="absolute top-4 right-4 z-50">
+        <AuthButton />
+      </div>
+
       {/* dark overlay for readability */}
       <div className="absolute inset-0 bg-black/60 z-0" />
 
@@ -122,18 +128,19 @@ export default function Home() {
         </div>
 
         {/* Navigation Buttons */}
-<div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-center">
-  <Link href="/wiki/characters">
-    <div className="bg-[#fed035] border-[3px] border-[#aea693] rounded-sm px-4 py-3 shadow-[2px_2px_0px_rgba(0,0,0,0.5)] hover:brightness-110 transition cursor-pointer">
-      <span className="font-pixel text-black text-xl sm:text-2xl">Characters</span>
-    </div>
-  </Link>
-  <Link href="/categories">
-    <div className="bg-[#fed035] border-[3px] border-[#aea693] rounded-sm px-4 py-3 shadow-[2px_2px_0px_rgba(0,0,0,0.5)] hover:brightness-110 transition cursor-pointer">
-      <span className="font-pixel text-black text-xl sm:text-2xl">Categories</span>
-    </div>
-  </Link>
-</div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-center">
+          <Link href="/wiki/characters">
+            <div className="bg-[#fed035] border-[3px] border-[#aea693] rounded-sm px-4 py-3 shadow-[2px_2px_0px_rgba(0,0,0,0.5)] hover:brightness-110 transition cursor-pointer">
+              <span className="font-pixel text-black text-xl sm:text-2xl">Characters</span>
+            </div>
+          </Link>
+          <Link href="/categories">
+            <div className="bg-[#fed035] border-[3px] border-[#aea693] rounded-sm px-4 py-3 shadow-[2px_2px_0px_rgba(0,0,0,0.5)] hover:brightness-110 transition cursor-pointer">
+              <span className="font-pixel text-black text-xl sm:text-2xl">Categories</span>
+            </div>
+          </Link>
+        </div>
+
         {/* CTA Button */}
         <div className="pt-8 text-center">
           <Link
