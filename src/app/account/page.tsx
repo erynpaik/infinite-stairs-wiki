@@ -1,0 +1,166 @@
+"use client";
+
+import { useSession } from "next-auth/react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+
+export default function AccountPage() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const params = useSearchParams();
+  const tab = params?.get("tab") ?? "avatar"; // <- optional chaining
+
+  useEffect(() => {
+    if (status === "unauthenticated") router.push("/");
+  }, [status, router]);
+
+  if (status === "loading") {
+    return <div className="p-6 text-white">Loading…</div>;
+  }
+  if (!session?.user) return null;
+
+  return (
+    <main className="max-w-3xl mx-auto px-4 py-10 text-white">
+      <h1 className="font-pixel text-3xl mb-6">Account</h1>
+
+      <div className="mb-6 flex gap-2">
+        <TabLink active={tab === "avatar"} href="/account?tab=avatar">
+          Avatar
+        </TabLink>
+      </div>
+
+      {tab === "avatar" && <AvatarSection />}
+    </main>
+  );
+}
+
+function TabLink({
+  active,
+  href,
+  children,
+}: {
+  active: boolean;
+  href: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <a
+      href={href}
+      className={`font-pixel px-4 py-2 border-[3px] rounded-sm ${
+        active
+          ? "bg-[#fed035] text-black border-[#aea693]"
+          : "bg-[#435b87] text-white border-[#aea693] hover:brightness-110"
+      } shadow-[2px_2px_0px_rgba(0,0,0,0.5)] transition`}
+    >
+      {children}
+    </a>
+  );
+}
+
+function AvatarSection() {
+  const { data: session } = useSession();
+  const fileRef = useRef<HTMLInputElement | null>(null);
+  const [preview, setPreview] = useState<string | null>(
+    session?.user?.image ?? null
+  );
+  const [file, setFile] = useState<File | null>(null);
+  const [saving, setSaving] = useState(false);
+
+  const initial = useMemo(() => {
+    const n = (session?.user?.name || session?.user?.email || "?").trim();
+    return n ? n[0]?.toUpperCase() : "U";
+  }, [session?.user?.name, session?.user?.email]);
+
+  function onPickFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const f = e.target.files?.[0];
+    if (!f) return;
+    if (!f.type.startsWith("image/")) {
+      alert("Please select an image file.");
+      return;
+    }
+    setFile(f);
+    setPreview(URL.createObjectURL(f));
+  }
+
+  async function onSave() {
+    if (!file) {
+      alert("Choose an image first.");
+      return;
+    }
+    setSaving(true);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      // optionally include name/email for your API
+      if (session?.user?.email) fd.append("email", session.user.email);
+
+      const res = await fetch("/api/account/upload-avatar", {
+        method: "POST",
+        body: fd,
+      });
+      if (!res.ok) throw new Error("Upload failed");
+      const data = await res.json(); // { url: string }
+      setPreview(data.url);
+      alert("Saved!");
+    } catch (e: any) {
+      alert(e?.message ?? "Something went wrong");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <section className="rounded-sm border-[3px] border-[#aea693] p-4 bg-[#0e0e12] shadow-[4px_4px_0px_rgba(0,0,0,0.6)]">
+      <h2 className="font-pixel text-xl mb-4">Edit Avatar</h2>
+
+      <div className="flex items-center gap-4">
+        <div className="h-24 w-24 rounded-full overflow-hidden border-[3px] border-[#aea693] bg-[#435b87] flex items-center justify-center">
+          {preview ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={preview} alt="Preview" className="h-full w-full object-cover" />
+          ) : (
+            <span className="font-pixel text-2xl text-white">{initial}</span>
+          )}
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <input
+            ref={fileRef}
+            type="file"
+            accept="image/*"
+            onChange={onPickFile}
+            className="hidden"
+          />
+          <button
+            onClick={() => fileRef.current?.click()}
+            className="font-pixel bg-[#435b87] text-white border-[3px] border-[#aea693] px-4 py-2 rounded-sm shadow-[2px_2px_0px_rgba(0,0,0,0.5)] hover:brightness-110 transition"
+          >
+            Choose Image
+          </button>
+          <p className="text-xs text-gray-400">PNG/JPG, up to ~2MB recommended.</p>
+        </div>
+      </div>
+
+      <div className="mt-6 flex gap-2">
+        <button
+          onClick={onSave}
+          disabled={saving}
+          className="font-pixel bg-[#fed035] text-black border-[3px] border-[#aea693] px-5 py-2 rounded-sm shadow-[2px_2px_0px_rgba(0,0,0,0.5)] hover:brightness-110 transition disabled:opacity-70"
+        >
+          {saving ? "Saving…" : "Save Avatar"}
+        </button>
+        {preview && (
+          <button
+            onClick={() => {
+              setPreview(session?.user?.image ?? null);
+              setFile(null);
+            }}
+            className="font-pixel bg-[#2b2b2f] text-white border-[3px] border-[#aea693] px-5 py-2 rounded-sm shadow-[2px_2px_0px_rgba(0,0,0,0.5)] hover:brightness-110 transition"
+          >
+            Reset
+          </button>
+        )}
+      </div>
+    </section>
+  );
+}

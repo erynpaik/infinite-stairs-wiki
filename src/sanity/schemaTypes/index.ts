@@ -6,6 +6,7 @@ import { authorType } from './authorType'
 import { character } from './character'
 import { categoryType } from './category' 
 import pet from './pet'
+import comment from './comment'
 
 
 export const schema: { types: SchemaTypeDefinition[] } = {
@@ -16,6 +17,7 @@ export const schema: { types: SchemaTypeDefinition[] } = {
     authorType,
     character,
     pet,
+    comment, 
   ],
 }
 
