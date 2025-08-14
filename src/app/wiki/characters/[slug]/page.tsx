@@ -25,7 +25,7 @@ export default async function CharacterDetailPage({ params }: Props) {
       }
     }`,
     { slug: params.slug },
-    { cache: 'no-store' }
+    { next: { revalidate: 60 } }
   );
 
   if (!character) {
