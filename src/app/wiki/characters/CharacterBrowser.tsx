@@ -5,23 +5,20 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { urlFor } from '@/lib/sanityImage'
 
+type SanityImage = {
+  asset: { _ref: string }
+}
+
 type Character = {
   _id: string
   name: string
   description: string
-  slug: {
-    current: string
-  }
-  image?: {
-    asset: {
-      _ref: string
-    }
-  }
+  slug: { current: string }
+  image?: SanityImage          // portrait or generic image (may have bg)
+  sprite?: SanityImage         // transparent sprite if available
   category?: {
     name: string
-    slug: {
-      current: string
-    }
+    slug: { current: string }
   }
 }
 
@@ -36,9 +33,7 @@ export default function CharacterBrowser({ characters }: { characters: Character
       const match = characters.find(
         (char) => char.name.trim().toLowerCase() === trimmed
       )
-      if (match) {
-        router.push(`/wiki/characters/${match.slug.current}`)
-      }
+      if (match) router.push(`/wiki/characters/${match.slug.current}`)
     }
   }
 
@@ -100,26 +95,35 @@ export default function CharacterBrowser({ characters }: { characters: Character
         </p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-          {filteredCharacters.map((char) => (
-            <Link key={char._id} href={`/wiki/characters/${char.slug.current}`}>
-              <div className="border-2 border-[#435b87] rounded-lg p-4 shadow bg-black hover:brightness-110 transition cursor-pointer text-center">
-                {char.image && (
-                  <img
-                    src={urlFor(char.image).width(300).url()}
-                    alt={char.name}
-                    loading="lazy"
-                    className="rounded mb-4 w-full h-60 object-contain bg-black"
-                  />
-                )}
-                <h2 className="text-2xl text-white mb-2">{char.name}</h2>
-                {char.category && (
-                  <div className="bg-[#fed035] text-black text-xs px-3 py-1 rounded-sm font-pixel inline-block mt-2">
-                    {char.category.name}
-                  </div>
-                )}
-              </div>
-            </Link>
-          ))}
+          {filteredCharacters.map((char) => {
+            // Prefer transparent sprite when present; fall back to image
+            const imgSource = (char as any).sprite ?? char.image
+            const imgUrl = imgSource
+              ? urlFor(imgSource).format('png').width(300).url()
+              : undefined
+
+            return (
+              <Link key={char._id} href={`/wiki/characters/${char.slug.current}`}>
+                <div className="border-2 border-[#435b87] rounded-lg p-4 shadow bg-black hover:brightness-110 transition cursor-pointer text-center">
+                  {imgUrl && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={imgUrl}
+                      alt={char.name}
+                      loading="lazy"
+                      className="rounded mb-4 w-full h-60 object-contain bg-transparent"
+                    />
+                  )}
+                  <h2 className="text-2xl text-white mb-2">{char.name}</h2>
+                  {char.category && (
+                    <div className="bg-[#fed035] text-black text-xs px-3 py-1 rounded-sm font-pixel inline-block mt-2">
+                      {char.category.name}
+                    </div>
+                  )}
+                </div>
+              </Link>
+            )
+          })}
         </div>
       )}
     </>

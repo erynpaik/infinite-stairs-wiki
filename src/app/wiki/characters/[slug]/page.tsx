@@ -38,29 +38,32 @@ export default async function CharacterDetailPage({ params }: Props) {
 
         {/* Back Button at Top */}
         <div className="flex justify-start pb-6">
-  <a
-    href="/wiki/characters"
-    className="font-pixel text-white hover:underline text-[24px]"
-  >
-    ← Back to Characters
-  </a>
-</div>
-
+          <a
+            href="/wiki/characters"
+            className="font-pixel text-white hover:underline text-[24px]"
+          >
+            ← Back to Characters
+          </a>
+        </div>
 
         {/* Character Name */}
         <h1 className="text-4xl sm:text-5xl font-bold text-center drop-shadow">
           {character.name}
         </h1>
 
-        {/* Character Image */}
+        {/* Character Image (force transparent format, no bg) */}
         {character.image && (
           <div className="flex justify-center">
-            <img
-              src={urlFor(character.image).width(600).url()}
-              alt={character.name}
-              loading="lazy"
-              className="rounded-lg border-4 border-[#435b87] bg-black p-2 w-full max-w-sm"
-            />
+            {/* wrapper keeps border but no background */}
+            <div className="rounded-lg border-4 border-[#435b87] bg-transparent p-2">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={urlFor(character.image).format('png').width(600).url()}
+                alt={character.name}
+                loading="lazy"
+                className="w-full max-w-sm object-contain bg-transparent"
+              />
+            </div>
           </div>
         )}
 
@@ -75,10 +78,10 @@ export default async function CharacterDetailPage({ params }: Props) {
         {character.howToObtain && (
           <>
             <div className="flex justify-center mb-2">
-  <div className="bg-[#f08080] border-[3px] border-[#d46a6a] rounded-sm px-6 py-2 inline-block shadow-[2px_2px_0px_rgba(0,0,0,0.5)] font-pixel text-white text-2xl text-center">
-    How to Obtain
-  </div>
-</div>
+              <div className="bg-[#f08080] border-[3px] border-[#d46a6a] rounded-sm px-6 py-2 inline-block shadow-[2px_2px_0px_rgba(0,0,0,0.5)] font-pixel text-white text-2xl text-center">
+                How to Obtain
+              </div>
+            </div>
             <p className="text-center text-lg text-gray-300 whitespace-pre-line leading-relaxed">
               {character.howToObtain}
             </p>
@@ -106,7 +109,7 @@ export default async function CharacterDetailPage({ params }: Props) {
           </>
         )}
 
-        {/* Skins */}
+        {/* Skins (also force transparent format, no bg) */}
         {character.skins?.length > 0 && (
           <>
             <h3 className="text-2xl font-bold mt-10 mb-4 text-center text-white">Skins</h3>
@@ -114,11 +117,12 @@ export default async function CharacterDetailPage({ params }: Props) {
               {character.skins.map((skin: any, i: number) => (
                 <div key={i} className="border-[2px] border-[#435b87] rounded-xl p-4 shadow bg-black">
                   {skin.image && (
+                    // eslint-disable-next-line @next/next/no-img-element
                     <img
-                      src={urlFor(skin.image).width(400).url()}
+                      src={urlFor(skin.image).format('png').width(400).url()}
                       alt={skin.name}
                       loading="lazy"
-                      className="w-full h-64 object-contain rounded mb-3 bg-black"
+                      className="w-full h-64 object-contain rounded mb-3 bg-transparent"
                     />
                   )}
                   <p className="text-white font-pixel">{skin.name}</p>
