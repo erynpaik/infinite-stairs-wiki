@@ -90,9 +90,29 @@ export default function Home() {
         </h1>
 
         {/* Short intro */}
-        <p className="text-center text-lg sm:text-xl text-gray-300">
-          Welcome! Explore characters, titles, unlock guides, and secrets from the pixelated addicting game of Infinite Stairs!
-        </p>
+        <p className="text-center text-gray-300 font-pixel max-w-2xl mx-auto mb-6">
+  Welcome! Explore characters, titles, unlock guides, and secrets from the 
+  pixelated addicting game of Infinite Stairs! 
+  Available on 
+  <a 
+    href="https://play.google.com/store/apps/details?id=com.nhnent.SKgame.InfiniteStair" 
+    target="_blank" 
+    rel="noopener noreferrer"
+    className="text-blue-400 underline hover:text-blue-300 ml-1 mr-1"
+  >
+    Android
+  </a> 
+  and 
+  <a 
+    href="https://apps.apple.com/app/id909654226" 
+    target="_blank" 
+    rel="noopener noreferrer"
+    className="text-blue-400 underline hover:text-blue-300 ml-1"
+  >
+    iOS
+  </a>.
+</p>
+
 
         {/* Search bar */}
         <div>
