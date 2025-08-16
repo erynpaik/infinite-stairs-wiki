@@ -25,7 +25,7 @@ export default async function CharacterDetailPage({ params }: Props) {
       }
     }`,
     { slug: params.slug },
-    { next: { revalidate: 60 } }
+    { cache: 'force-cache', next: { revalidate: 3600 } }
   );
 
   if (!character) {

@@ -1,13 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { urlFor } from '@/lib/sanityImage'
 
-type SanityImage = {
-  asset: { _ref: string }
-}
+type SanityImage = { asset: { _ref: string } }
 
 type Character = {
   _id: string
@@ -25,38 +23,90 @@ type Character = {
 export default function CharacterBrowser({ characters }: { characters: Character[] }) {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
+  const [open, setOpen] = useState(false) // suggestions dropdown
+  const inputRef = useRef<HTMLInputElement | null>(null)
   const router = useRouter()
 
+  const norm = (s: string) => s.trim().toLowerCase()
+
+  // suggestions under the search bar (limit to 6)
+  const suggestions = useMemo(() => {
+    const q = norm(searchTerm)
+    if (!q) return []
+    return characters.filter(c => norm(c.name).includes(q)).slice(0, 6)
+  }, [characters, searchTerm])
+
+  // categories for filter chips
+  const categories = useMemo(
+    () => Array.from(new Set(characters.map(c => c.category?.name).filter(Boolean))) as string[],
+    [characters]
+  )
+
+  // grid filters by category AND live search
+  const filteredCharacters = useMemo(() => {
+    const q = norm(searchTerm)
+    return characters.filter(c => {
+      const passCategory = selectedCategory ? c.category?.name === selectedCategory : true
+      const passSearch = q ? norm(c.name).includes(q) : true
+      return passCategory && passSearch
+    })
+  }, [characters, selectedCategory, searchTerm])
+
+  // Enter goes to exact match
   const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && characters.length > 0) {
-      const trimmed = searchTerm.trim().toLowerCase()
-      const match = characters.find(
-        (char) => char.name.trim().toLowerCase() === trimmed
-      )
-      if (match) router.push(`/wiki/characters/${match.slug.current}`)
+      const match = characters.find(c => norm(c.name) === norm(searchTerm))
+      if (match) {
+        router.push(`/wiki/characters/${match.slug.current}`)
+        setOpen(false)
+      }
+    }
+    if (e.key === 'Escape') {
+      setOpen(false)
+      inputRef.current?.blur()
     }
   }
 
-  const categories = Array.from(
-    new Set(characters.map((char) => char.category?.name).filter(Boolean))
-  )
-
-  const filteredCharacters = selectedCategory
-    ? characters.filter((char) => char.category?.name === selectedCategory)
-    : characters
-
   return (
     <>
-      {/* Search Bar */}
-      <div className="mb-10 text-center">
-        <input
-          type="text"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          onKeyDown={handleSearchKeyDown}
-          placeholder="Search character name..."
-          className="px-4 py-2 border-2 border-[#435b87] rounded bg-black text-white font-pixel w-full max-w-md"
-        />
+      {/* Search + Suggestions */}
+      <div className="mb-10 text-center relative flex justify-center">
+        <div className="w-full max-w-md relative">
+          <input
+            ref={inputRef}
+            type="text"
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value)
+              setOpen(true)
+            }}
+            onKeyDown={handleSearchKeyDown}
+            onFocus={() => setOpen(Boolean(searchTerm))}
+            onBlur={() => setTimeout(() => setOpen(false), 120)} // allow click
+            placeholder="Search character name..."
+            className="px-4 py-2 border-2 border-[#435b87] rounded bg-black text-white font-pixel w-full"
+          />
+
+          {open && suggestions.length > 0 && (
+            <ul
+              className="absolute left-0 right-0 mt-2 bg-[#0e0e12] border-2 border-[#435b87] rounded-sm shadow-[2px_2px_0px_rgba(0,0,0,0.5)] text-left z-50"
+              role="listbox"
+            >
+              {suggestions.map((s) => (
+                <li key={s._id} role="option">
+                  <Link
+                    href={`/wiki/characters/${s.slug.current}`}
+                    className="block px-4 py-2 font-pixel text-white hover:bg-[#1a1a22] transition"
+                    onMouseDown={(e) => e.preventDefault()} // keep input from blurring first
+                    onClick={() => setOpen(false)}
+                  >
+                    {s.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </div>
 
       {/* Filter Buttons */}
@@ -96,11 +146,9 @@ export default function CharacterBrowser({ characters }: { characters: Character
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
           {filteredCharacters.map((char) => {
-            // Prefer transparent sprite when present; fall back to image
+            // Prefer transparent sprite, fall back to image
             const imgSource = (char as any).sprite ?? char.image
-            const imgUrl = imgSource
-              ? urlFor(imgSource).format('png').width(300).url()
-              : undefined
+            const imgUrl = imgSource ? urlFor(imgSource).format('png').width(300).url() : undefined
 
             return (
               <Link key={char._id} href={`/wiki/characters/${char.slug.current}`}>
