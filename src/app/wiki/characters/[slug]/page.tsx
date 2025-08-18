@@ -14,18 +14,17 @@ export default async function CharacterDetailPage({ params }: Props) {
       description,
       howToObtain,
       image,
-      titles[]{
-        name,
-        howToObtain
-      },
-      skins[]{
-        name,
-        howToObtain,
-        image
-      }
+      titles[]{ name, howToObtain },
+      skins[]{ name, howToObtain, image }
     }`,
     { slug: params.slug },
-    { cache: 'force-cache', next: { revalidate: 3600 } }
+    {
+      cache: 'force-cache',
+      next: {
+        revalidate: 3600,                    // 1 hour ISR
+        tags: ['characters', `character:${params.slug}`], // cache tags
+      },
+    }
   );
 
   if (!character) {
@@ -35,26 +34,18 @@ export default async function CharacterDetailPage({ params }: Props) {
   return (
     <main className="min-h-screen bg-black text-white px-6 py-16 font-pixel">
       <div className="max-w-2xl mx-auto space-y-10">
-
-        {/* Back Button at Top */}
         <div className="flex justify-start pb-6">
-          <a
-            href="/wiki/characters"
-            className="font-pixel text-white hover:underline text-[24px]"
-          >
+          <a href="/wiki/characters" className="font-pixel text-white hover:underline text-[24px]">
             ← Back to Characters
           </a>
         </div>
 
-        {/* Character Name */}
         <h1 className="text-4xl sm:text-5xl font-bold text-center drop-shadow">
           {character.name}
         </h1>
 
-        {/* Character Image (force transparent format, no bg) */}
         {character.image && (
           <div className="flex justify-center">
-            {/* wrapper keeps border but no background */}
             <div className="rounded-lg border-4 border-[#435b87] bg-transparent p-2">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -67,14 +58,12 @@ export default async function CharacterDetailPage({ params }: Props) {
           </div>
         )}
 
-        {/* Character Description */}
         {character.description && (
           <p className="text-center text-lg text-gray-300 leading-relaxed whitespace-pre-line">
             {character.description}
           </p>
         )}
 
-        {/* How to Obtain */}
         {character.howToObtain && (
           <>
             <div className="flex justify-center mb-2">
@@ -88,7 +77,6 @@ export default async function CharacterDetailPage({ params }: Props) {
           </>
         )}
 
-        {/* Titles */}
         {character.titles?.length > 0 && (
           <>
             <h3 className="text-2xl font-bold mt-10 mb-4 text-center text-white">Titles</h3>
@@ -109,7 +97,6 @@ export default async function CharacterDetailPage({ params }: Props) {
           </>
         )}
 
-        {/* Skins (also force transparent format, no bg) */}
         {character.skins?.length > 0 && (
           <>
             <h3 className="text-2xl font-bold mt-10 mb-4 text-center text-white">Skins</h3>

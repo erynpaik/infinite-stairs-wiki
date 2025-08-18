@@ -90,9 +90,10 @@ export default function Home() {
         </h1>
 
         {/* Short intro */}
-        <p className="text-center text-gray-300 font-pixel max-w-2xl mx-auto mb-6">
+        <p className="text-center text-gray-300 font-pixel text-xl max-w-2xl mx-auto mb-6">
   Welcome! Explore characters, titles, unlock guides, and secrets from the 
   pixelated addicting game of Infinite Stairs! 
+  
   Available on 
   <a 
     href="https://play.google.com/store/apps/details?id=com.nhnent.SKgame.InfiniteStair" 
@@ -112,7 +113,6 @@ export default function Home() {
     iOS
   </a>.
 </p>
-
 
         {/* Search bar */}
         <div>
